@@ -1,0 +1,23 @@
+{
+  "name": "viram",
+  "version": "1.0.0",
+  "description": "Sanskrit Devanagari space to Śāradā separator (𑇈) converter using Siddhanta font",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "test": "node test.js"
+  },
+  "keywords": [
+    "sanskrit",
+    "devanagari",
+    "sarada",
+    "sharada",
+    "separator",
+    "siddhanta",
+    "viram",
+    "text-processing"
+  ],
+  "author": "",
+  "license": "MIT"
+}
+

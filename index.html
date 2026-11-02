@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="sa" data-theme="parchment">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>विराम • Virāma - Sanskrit Space to Śāradā Separator (𑇈) Converter</title>
+  <meta name="description" content="A specialized Sanskrit typography tool that replaces spaces in Devanagari text with the Śāradā separator character (𑇈) using the Siddhanta font.">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="app-container">
+    <!-- Header -->
+    <header class="app-header">
+      <div class="brand">
+        <div class="brand-icon" title="Śāradā Separator 𑇈">𑇈</div>
+        <div class="brand-title-group">
+          <h1>
+            <span class="sanskrit-heading">विराम</span>
+            <span>• Virāma</span>
+          </h1>
+          <p>Sanskrit Devanagari Space to Śāradā Separator (𑇈) Converter</p>
+        </div>
+      </div>
+      <div class="header-actions">
+        <span class="font-badge" title="Loaded from fonts/siddhanta.ttf">Siddhanta Font Active</span>
+        <select id="themeSelect" class="select-custom" aria-label="Select Theme">
+          <option value="parchment">📜 Bhojapatra / Parchment</option>
+          <option value="dark">🌙 Vedic Night / Dark</option>
+          <option value="light">☀️ Clean Light</option>
+        </select>
+      </div>
+    </header>
+
+    <!-- Toolbar / Settings -->
+    <div class="toolbar-card">
+      <div class="options-group">
+        <label class="custom-checkbox" title="Replaces consecutive spaces with a single 𑇈">
+          <input type="checkbox" id="optCollapse" checked>
+          <span>Collapse multiple spaces</span>
+        </label>
+        <label class="custom-checkbox" title="Keeps newlines intact while replacing spaces within lines">
+          <input type="checkbox" id="optPreserveLines" checked>
+          <span>Preserve line breaks</span>
+        </label>
+        <label class="custom-checkbox" title="Removes space preceding । and ॥ before converting">
+          <input type="checkbox" id="optTrimDanda" checked>
+          <span>Trim space before daṇḍa (। / ॥)</span>
+        </label>
+        <label class="custom-checkbox" title="Avoid dangling separators at the start or end of lines">
+          <input type="checkbox" id="optTrimEdges" checked>
+          <span>Trim line ends</span>
+        </label>
+        <label class="custom-checkbox" title="Update output immediately while typing or pasting">
+          <input type="checkbox" id="optRealtime" checked>
+          <span>Real-time conversion</span>
+        </label>
+      </div>
+
+      <div class="font-size-control">
+        <button id="btnFontDec" class="btn-icon-sm" title="Decrease font size" aria-label="Decrease font size">A−</button>
+        <span id="fontSizeDisplay" class="font-size-label">24px</span>
+        <button id="btnFontInc" class="btn-icon-sm" title="Increase font size" aria-label="Increase font size">A+</button>
+        <button id="btnFontReset" class="btn-icon-sm" title="Reset font size" aria-label="Reset font size">↺</button>
+      </div>
+    </div>
+
+    <!-- Workspace Panels -->
+    <main class="workspace-grid">
+      <!-- Input Panel -->
+      <section class="editor-panel">
+        <div class="panel-header">
+          <div class="panel-title">
+            <span>मूलपाठः</span>
+            <span class="badge">Input (Devanagari)</span>
+          </div>
+          <div class="panel-actions">
+            <select id="sampleSelect" class="select-custom" aria-label="Load Sample Sanskrit Text">
+              <option value="" disabled selected>Load Sample (उदाहरणाणि)...</option>
+              <option value="gita">Śrīmad Bhagavad Gītā 1.1</option>
+              <option value="gayatri">Gāyatrī Mantra</option>
+              <option value="shanti">Śānti Pāṭha</option>
+              <option value="mrityunjaya">Mahāmṛtyuñjaya Mantra</option>
+              <option value="tandava">Śiva Tāṇḍava Stotram</option>
+              <option value="rigveda">Rigveda 1.1.1 (Agni Sūkta)</option>
+            </select>
+            <button id="btnPaste" class="btn btn-outline btn-sm" title="Paste text from clipboard">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path>
+                <rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect>
+              </svg>
+              Paste
+            </button>
+            <button id="btnClear" class="btn btn-outline btn-sm" title="Clear all text">
+              Clear
+            </button>
+          </div>
+        </div>
+
+        <div class="textarea-wrapper">
+          <textarea
+            id="inputText"
+            class="sanskrit-textarea sanskrit-text"
+            placeholder="अत्र संस्कृतपाठं लिखन्तु वा स्थापयन्तु... (Type or paste Sanskrit Devanagari text here...)"
+            spellcheck="false"
+            autocomplete="off"
+            autocorrect="off"
+            autocapitalize="off"
+          ></textarea>
+        </div>
+
+        <!-- Quick Insertion Bar -->
+        <div class="quick-inserts">
+          <span class="quick-inserts-label">त्वरित-प्रवेशः (Quick Insert):</span>
+          <button class="chip-btn" data-insert="𑇈" title="Śāradā Separator (U+111C8)">
+            𑇈 <span class="chip-name">विभाजकः</span>
+          </button>
+          <button class="chip-btn" data-insert="।" title="Single Daṇḍa (U+0964)">
+            । <span class="chip-name">दण्डः</span>
+          </button>
+          <button class="chip-btn" data-insert="॥" title="Double Daṇḍa (U+0965)">
+            ॥ <span class="chip-name">द्विदण्डः</span>
+          </button>
+          <button class="chip-btn" data-insert="ॐ" title="Sacred Om (U+0950)">
+            ॐ <span class="chip-name">प्रणवः</span>
+          </button>
+          <button class="chip-btn" data-insert="ऽ" title="Avagraha (U+093D)">
+            ऽ <span class="chip-name">अवग्रहः</span>
+          </button>
+        </div>
+
+        <div class="panel-footer">
+          <div class="stats-group">
+            <span class="stat-item">Characters: <strong id="inputChars">0</strong></span>
+            <span class="stat-item">Spaces: <strong id="inputSpaces">0</strong></span>
+          </div>
+          <div style="display: flex; gap: 0.5rem;">
+            <button id="btnConvert" class="btn btn-primary btn-sm" title="Transform spaces to 𑇈">
+              <span>Convert (विभाजक-प्रयोगः)</span>
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- Output Panel -->
+      <section class="editor-panel">
+        <div class="panel-header">
+          <div class="panel-title">
+            <span>संशोधितपाठः</span>
+            <span class="badge">Modified with 𑇈</span>
+          </div>
+          <div class="panel-actions">
+            <button id="btnReverse" class="btn btn-outline btn-sm" title="Convert 𑇈 back to regular spaces">
+              𑇈 → Space
+            </button>
+            <button id="btnDownload" class="btn btn-outline btn-sm" title="Download modified text as .txt file">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                <polyline points="7 10 12 15 17 10"></polyline>
+                <line x1="12" y1="15" x2="12" y2="3"></line>
+              </svg>
+              Download
+            </button>
+            <!-- Primary Copy Button -->
+            <button id="btnCopy" class="btn btn-copy" title="Copy modified Sanskrit text to clipboard">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+              </svg>
+              <span>Copy Text (प्रतिलिपिः)</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="textarea-wrapper">
+          <textarea
+            id="outputText"
+            class="sanskrit-textarea sanskrit-text"
+            readonly
+            placeholder="अत्र संशोधितपाठः द्रक्ष्यते... (Modified Sanskrit text will appear here...)"
+            spellcheck="false"
+          ></textarea>
+        </div>
+
+        <div class="panel-footer">
+          <div class="stats-group">
+            <span class="stat-item">Characters: <strong id="outputChars">0</strong></span>
+            <span class="stat-item">Separators (𑇈): <strong id="outputSeparators">0</strong></span>
+          </div>
+          <div class="stat-item">
+            <span>Font: <strong>Siddhanta (सिद्धान्त)</strong></span>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- Cultural and Typography Information Card -->
+    <section class="info-section">
+      <div class="info-block">
+        <h3>
+          <span>𑇈</span>
+          <span>About the Śāradā Separator (शारदा-विभाजकः)</span>
+        </h3>
+        <p>
+          The character <code>𑇈</code> (Unicode <code>U+111C8</code>, <em>Sharada Separator</em>) is an ancient inter-word punctuation mark traditionally utilized in Kashmiri Śāradā manuscripts and epigraphy. Unlike modern European-style spaces which break the natural visual continuity of Devanagari <em>shiro-rekhā</em> (top line), the Śāradā separator marks word or phrase divisions cleanly while preserving traditional manuscript cadence.
+        </p>
+      </div>
+
+      <div class="info-block">
+        <h3>
+          <span>𑌸ि</span>
+          <span>About Siddhanta Font (सिद्धान्त-फॉण्ट्)</span>
+        </h3>
+        <p>
+          The <strong>Siddhanta</strong> OpenType font (designed by Mihail Bayaryn) is an acclaimed scholarly font for Sanskrit and Vedic literature. It contains comprehensive coverage of complex conjunct consonants (संयुक्ताक्षराणि), Vedic svara accents, and classical manuscript punctuation, including native rendering of the Śāradā separator glyph.
+        </p>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="app-footer">
+      <p>विराम (Virāma) • Built with Sanskrit Typography &amp; Siddhanta Font</p>
+    </footer>
+  </div>
+
+  <!-- Toast Container -->
+  <div class="toast-container">
+    <div id="toast" class="toast">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="20 6 9 17 4 12"></polyline>
+      </svg>
+      <span id="toastMessage">प्रतिलिपिः कृता (Copied!)</span>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
+
